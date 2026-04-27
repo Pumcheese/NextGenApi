@@ -1,15 +1,15 @@
-import { PrismaClient } from "@prisma/client/extension";
+import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
 };
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: ["warn", "error"],
-  });
+export const getPrisma = () => {
+  if (!globalForPrisma.prisma) {
+    globalForPrisma.prisma = new PrismaClient({
+      log: ["warn", "error"],
+    });
+  }
 
-if (import.meta.env.DEV) {
-  globalForPrisma.prisma = prisma;
-}
+  return globalForPrisma.prisma;
+};

@@ -1,0 +1,16 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import { copy, languages, type Language } from "../../i18n/translations";
+
+export async function getStaticPaths() {
+  return languages.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Language;
+const t = copy[lang];
+---
+
+<MainLayout lang={lang}>
+  <h1 class="text-3xl font-bold">{t.heroTitle}</h1>
+  <p class="mt-4">{t.heroDescription}</p>
+</MainLayout>

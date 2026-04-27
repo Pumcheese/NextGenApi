@@ -1,0 +1,39 @@
+---
+import type { Language } from "../i18n/translations";
+import { copy } from "../i18n/translations";
+
+interface Props {
+  lang: Language;
+  title?: string;
+}
+
+const { lang, title } = Astro.props;
+const t = copy[lang];
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title ? `${title} | ${t.siteTitle}` : t.siteTitle}</title>
+  </head>
+  <body class="mx-auto max-w-4xl px-6 py-8">
+    <header class="mb-8 flex items-center justify-between">
+      <nav class="flex gap-4">
+        <a href={`/${lang}`}>{t.nav.home}</a>
+        <a href={`/${lang}/servicios`}>{t.nav.services}</a>
+        <a href={`/${lang}/proyectos`}>{t.nav.projects}</a>
+        <a href={`/${lang}/contacto`}>{t.nav.contact}</a>
+        <a href="/admin">{t.nav.admin}</a>
+      </nav>
+      <div class="flex gap-2">
+        <a href="/es">ES</a>
+        <span>|</span>
+        <a href="/en">EN</a>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

@@ -1,9 +1,12 @@
 import type { APIRoute } from "astro";
-import { prisma } from "../../lib/db";
+import { getPrisma } from "../../lib/db";
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const body = await request.json();
+    const contentType = request.headers.get("content-type") ?? "";
+    const body = contentType.includes("application/json")
+      ? await request.json()
+      : Object.fromEntries((await request.formData()).entries());
     const { nombre, email, telefono, mensaje } = body;
 
     if (!nombre || !email || !mensaje) {
@@ -21,6 +24,8 @@ export const POST: APIRoute = async ({ request }) => {
         { status: 400 }
       );
     }
+
+    const prisma = getPrisma();
 
     const nuevoContacto = await prisma.contact.create({
       data: {

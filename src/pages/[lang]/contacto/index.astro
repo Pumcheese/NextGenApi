@@ -1,0 +1,22 @@
+---
+import MainLayout from "../../../layouts/MainLayout.astro";
+import { copy, languages, type Language } from "../../../i18n/translations";
+
+export async function getStaticPaths() {
+  return languages.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Language;
+const t = copy[lang];
+---
+
+<MainLayout lang={lang} title={t.nav.contact}>
+  <h1 class="text-3xl font-bold">{t.contact.title}</h1>
+  <form method="POST" action="/api/contact" class="mt-6 flex flex-col gap-3">
+    <input name="nombre" placeholder="Nombre" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input name="telefono" placeholder="Teléfono (opcional)" />
+    <textarea name="mensaje" placeholder="Mensaje" required />
+    <button type="submit">{t.contact.submit}</button>
+  </form>
+</MainLayout>

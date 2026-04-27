@@ -4,8 +4,11 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "prisma:generate": "prisma generate",
+    "prebuild": "npm run prisma:generate",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "postinstall": "npm run prisma:generate"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.4",
