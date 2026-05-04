@@ -57,7 +57,6 @@ const copy = getSiteCopy(lang);
     <label class="block">
       <span class="mb-2 block text-sm font-medium text-slate-700">{copy.form.service}</span>
       <select class="form-field" name="service">
-        <option value=""></option>
         {copy.form.serviceOptions.map((option) => (
           <option value={option.value}>{option.label}</option>
         ))}
