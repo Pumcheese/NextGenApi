@@ -74,6 +74,11 @@ type SiteCopy = {
   admin: {
     loginTitle: string;
     loginDescription: string;
+    recoveryLinkLabel: string;
+    recoveryTitle: string;
+    recoveryDescription: string;
+    recoveryNotice: string;
+    recoveryBackLabel: string;
     dashboardTitle: string;
     dashboardDescription: string;
     emptyState: string;
@@ -260,6 +265,13 @@ export const siteCopy: Record<Lang, SiteCopy> = {
       loginTitle: "Acceso al area privada",
       loginDescription:
         "Esta zona esta destinada exclusivamente al equipo interno encargado de revisar y gestionar las solicitudes recibidas.",
+      recoveryLinkLabel: "Recuperar acceso",
+      recoveryTitle: "Recuperacion basica de acceso",
+      recoveryDescription:
+        "Las cuentas de administracion se gestionan de forma interna. Si has perdido el acceso, debes solicitar el restablecimiento al responsable tecnico o volver a generar la credencial desde el entorno de administracion.",
+      recoveryNotice:
+        "En esta version del proyecto no se implementa reseteo automatico por correo. La recuperacion se realiza de forma controlada por el administrador del sistema.",
+      recoveryBackLabel: "Volver al inicio de sesion",
       dashboardTitle: "Panel de administracion",
       dashboardDescription:
         "Consulta las solicitudes entrantes, revisa su contexto y actualiza su estado para mantener un seguimiento ordenado.",
@@ -460,6 +472,13 @@ export const siteCopy: Record<Lang, SiteCopy> = {
       loginTitle: "Private area access",
       loginDescription:
         "This area is intended exclusively for the internal team responsible for reviewing and managing incoming requests.",
+      recoveryLinkLabel: "Recover access",
+      recoveryTitle: "Basic access recovery",
+      recoveryDescription:
+        "Administration accounts are managed internally. If you have lost access, you must request a reset from the technical owner or generate the credential again from the administration environment.",
+      recoveryNotice:
+        "This project version does not implement automatic email resets. Recovery is handled in a controlled way by the system administrator.",
+      recoveryBackLabel: "Back to sign in",
       dashboardTitle: "Administration dashboard",
       dashboardDescription:
         "Review incoming requests, understand their context and update their status to maintain an organized workflow.",

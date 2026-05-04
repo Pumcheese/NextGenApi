@@ -39,3 +39,7 @@ export function takeRateLimit(key: string, limit: number, windowMs: number) {
     resetAt: current.resetAt,
   };
 }
+
+export function __resetRateLimitStore() {
+  store.clear();
+}

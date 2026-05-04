@@ -1,0 +1,31 @@
+---
+import MainLayout from "../../../layouts/MainLayout.astro";
+import { resolveLang, withLang } from "../../../lib/i18n";
+import { getSiteCopy } from "../../../lib/site";
+
+const lang = resolveLang(Astro.params.lang);
+const copy = getSiteCopy(lang);
+---
+
+<MainLayout lang={lang} title={copy.admin.recoveryTitle}>
+  <section class="section-vermont">
+    <div class="container-vermont max-w-3xl">
+      <div class="surface-panel p-8 md:p-12">
+        <p class="section-eyebrow">{copy.nav.admin}</p>
+        <h1 class="section-heading max-w-3xl text-4xl md:text-5xl">{copy.admin.recoveryTitle}</h1>
+        <p class="section-intro max-w-2xl">{copy.admin.recoveryDescription}</p>
+        <div class="mt-8 rounded-2xl border border-sky-100 bg-sky-50 px-5 py-4 text-sm leading-7 text-sky-900">
+          {copy.admin.recoveryNotice}
+        </div>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a href={withLang(lang, "/admin/login")} class="btn-primary">
+            {copy.admin.recoveryBackLabel}
+          </a>
+          <a href={withLang(lang, "/contact")} class="btn-secondary">
+            {copy.nav.contact}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>
