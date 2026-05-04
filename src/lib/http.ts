@@ -12,12 +12,17 @@ export function getClientIp(input: RequestCarrier) {
 
 export function ensureSameOrigin(input: RequestCarrier) {
   const origin = input.request.headers.get("origin");
+  const forwardedHost = input.request.headers.get("x-forwarded-host");
+  const forwardedProto = input.request.headers.get("x-forwarded-proto");
+  const host = forwardedHost || input.request.headers.get("host");
+  const protocol = forwardedProto || input.url.protocol.replace(":", "");
+  const publicOrigin = host ? `${protocol}://${host}` : input.url.origin;
 
   if (!origin) {
     return true;
   }
 
-  return origin === input.url.origin;
+  return origin === publicOrigin || origin === input.url.origin;
 }
 
 export function getSafeAdminReturnPath(rawValue: FormDataEntryValue | string | null | undefined, lang: string) {
