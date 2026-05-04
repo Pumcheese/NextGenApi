@@ -1,0 +1,46 @@
+---
+import PageHero from "../../components/PageHero.astro";
+import MainLayout from "../../layouts/MainLayout.astro";
+import { resolveLang, withLang } from "../../lib/i18n";
+import { getSiteCopy } from "../../lib/site";
+
+const lang = resolveLang(Astro.params.lang);
+const copy = getSiteCopy(lang);
+---
+
+<MainLayout lang={lang} title={copy.nav.services}>
+  <PageHero
+    eyebrow={copy.nav.services}
+    title={copy.services.title}
+    description={copy.services.intro}
+    primaryLabel={copy.nav.contactCta}
+    primaryHref={withLang(lang, "/contact")}
+    secondaryLabel={copy.nav.projects}
+    secondaryHref={withLang(lang, "/projects")}
+  />
+
+  <section class="section-soft">
+    <div class="container-vermont">
+      <div class="mt-6 grid gap-6 lg:grid-cols-3">
+        {copy.services.cards.map((service) => (
+          <article class="card-vermont h-full">
+            <h3>{service.title}</h3>
+            <p class="mt-4 leading-7">{service.description}</p>
+            <ul class="mt-5 list-disc space-y-2 pl-5 text-slate-700">
+              {service.bullets.map((bullet) => (
+                <li>{bullet}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+      <div class="cta-strip">
+        <div>
+          <p class="text-lg font-semibold text-[var(--vermont-dark)]">{copy.services.ctaTitle}</p>
+          <p class="mt-2 max-w-2xl text-slate-600">{copy.services.ctaText}</p>
+        </div>
+        <a href={withLang(lang, "/contact")} class="btn-primary">{copy.nav.contactCta}</a>
+      </div>
+    </div>
+  </section>
+</MainLayout>

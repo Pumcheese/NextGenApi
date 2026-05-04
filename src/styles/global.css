@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --vermont-dark: #061d2c;
+  --vermont-blue: #009dec;
+  --vermont-gray: #ebebe7;
+  --white: #ffffff;
+  --radius-lg: 1rem;
+  --color-primary: var(--vermont-dark);
+  --color-accent: var(--vermont-blue);
+  --color-bg: var(--white);
+  --color-surface: var(--white);
+  --color-text: #1f2937;
+  --color-muted: #4b5563;
+  --color-border: #e5e7eb;
+}
+
+body.theme-default {
+  --color-primary: var(--vermont-dark);
+  --color-accent: var(--vermont-blue);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    @apply bg-white text-gray-800 leading-relaxed antialiased;
+  }
+
+  h1 {
+    @apply text-4xl md:text-6xl font-extrabold text-[var(--color-primary)];
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl font-bold text-[var(--color-primary)];
+  }
+
+  h3 {
+    @apply text-2xl font-semibold text-[var(--color-primary)];
+  }
+
+  p {
+    color: var(--color-muted);
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+}
+
+@layer components {
+  .container-vermont {
+    @apply max-w-7xl mx-auto px-4 md:px-8;
+  }
+
+  .section-vermont {
+    @apply py-20 md:py-28;
+  }
+
+  .section-soft {
+    @apply py-16 md:py-20;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-2xl font-semibold text-white;
+    background: linear-gradient(90deg, var(--vermont-blue), #3bb7ff);
+    box-shadow: 0 14px 34px rgba(0, 157, 236, 0.24);
+  }
+
+  .header-cta {
+    min-width: 15.5rem;
+    white-space: nowrap;
+  }
+
+  .btn-primary:hover {
+    background: #3bb7ff;
+  }
+
+  .btn-primary:disabled,
+  .btn-secondary:disabled {
+    cursor: not-allowed;
+    opacity: 0.72;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-5 py-3 rounded-xl font-medium border-2 border-[var(--vermont-dark)] text-[var(--vermont-dark)] bg-transparent;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-[var(--vermont-dark)] text-white;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center px-5 py-3 rounded-xl font-semibold text-white;
+    background: linear-gradient(90deg, #dc2626, #ef4444);
+    box-shadow: 0 12px 28px rgba(220, 38, 38, 0.2);
+  }
+
+  .btn-danger:hover {
+    background: #ef4444;
+  }
+
+  .card-vermont {
+    @apply bg-white rounded-3xl p-7 border border-gray-200 shadow-md text-gray-700;
+    transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  }
+
+  .card-vermont:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 157, 236, 0.35);
+    box-shadow: 0 22px 44px rgba(2, 8, 23, 0.08);
+  }
+
+  .vermont-header {
+    @apply sticky top-0 z-50 backdrop-blur bg-white/90 border-b border-gray-100 w-full;
+  }
+
+  .hero-visual {
+    background-color: #061d2c;
+  }
+
+  .hero-grid {
+    background-image:
+      linear-gradient(135deg, rgba(6, 29, 44, 0.96) 0%, rgba(10, 61, 93, 0.96) 55%, rgba(0, 157, 236, 0.92) 100%),
+      linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: auto, 36px 36px, 36px 36px;
+  }
+
+  .hero-shell {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-shell::after {
+    content: "";
+    position: absolute;
+    right: -10rem;
+    top: 4rem;
+    width: 28rem;
+    height: 28rem;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(125, 211, 252, 0.28) 0%, rgba(125, 211, 252, 0) 68%);
+    filter: blur(8px);
+    pointer-events: none;
+  }
+
+  .section-eyebrow {
+    @apply text-sm font-semibold uppercase tracking-[0.24em] text-[var(--vermont-blue)];
+  }
+
+  .section-heading {
+    @apply mt-4 max-w-4xl text-4xl font-extrabold leading-tight text-[var(--vermont-dark)] md:text-6xl;
+  }
+
+  .section-intro {
+    @apply mt-6 max-w-3xl text-lg leading-8 text-slate-600;
+  }
+
+  .section-panel {
+    @apply rounded-[2rem] border border-slate-200 bg-white/85 p-8 shadow-lg shadow-slate-200/60 backdrop-blur md:p-10;
+  }
+
+  .section-panel-dark {
+    @apply rounded-[2rem] border border-white/10 bg-white/5 p-8 backdrop-blur md:p-10;
+  }
+
+  .section-grid-split {
+    @apply grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-start;
+  }
+
+  .cta-strip {
+    @apply mt-12 flex flex-col gap-4 rounded-[2rem] border border-sky-100 bg-sky-50/90 p-6 md:flex-row md:items-center md:justify-between md:p-8;
+  }
+
+  .info-list {
+    @apply space-y-4 text-slate-700;
+  }
+
+  .metric-card {
+    @apply rounded-2xl border border-white/10 bg-white/5 p-6 text-white;
+  }
+
+  .metric-value {
+    @apply text-4xl font-extrabold;
+  }
+
+  .case-card {
+    @apply rounded-3xl border p-8 flex flex-col justify-between;
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  }
+
+  .case-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--vermont-blue);
+    box-shadow: 0 18px 40px rgba(2, 8, 23, 0.08);
+  }
+
+  .case-chip {
+    @apply text-xs px-3 py-1 rounded-full border border-slate-200 text-slate-700;
+    background: rgba(2, 8, 23, 0.02);
+  }
+
+  .surface-panel {
+    @apply bg-white border border-slate-200 rounded-[2rem] shadow-lg shadow-slate-200/70;
+  }
+
+  .form-field {
+    @apply w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none;
+  }
+
+  .form-field:focus {
+    border-color: var(--vermont-blue);
+    box-shadow: 0 0 0 3px rgba(0, 157, 236, 0.12);
+  }
+
+  .admin-badge {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+  }
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  background: radial-gradient(circle at 10% 10%, rgba(235, 235, 231, 0.35), rgba(255, 255, 255, 0) 40%);
+  pointer-events: none;
+}
