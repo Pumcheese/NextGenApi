@@ -1,0 +1,59 @@
+---
+import ContactForm from "../../components/ContactForm.astro";
+import PageHero from "../../components/PageHero.astro";
+import MainLayout from "../../layouts/MainLayout.astro";
+import { resolveLang, withLang } from "../../lib/i18n";
+import { getSiteCopy } from "../../lib/site";
+
+const lang = resolveLang(Astro.params.lang);
+const copy = getSiteCopy(lang);
+const sent = Astro.url.searchParams.get("sent") === "1";
+const error = Astro.url.searchParams.get("error");
+const hasError = Boolean(error);
+const errorMessage =
+  error === "rate-limit" ? copy.admin.contactRateLimitError : copy.contact.error;
+---
+
+<MainLayout lang={lang} title={copy.nav.contact}>
+  <PageHero
+    eyebrow={copy.nav.contact}
+    title={copy.contact.title}
+    description={copy.contact.description}
+    primaryLabel={copy.form.submit}
+    primaryHref="#contact-form"
+    secondaryLabel={copy.nav.services}
+    secondaryHref={withLang(lang, "/services")}
+  />
+
+  <section class="section-soft">
+    <div class="container-vermont grid gap-10 lg:grid-cols-[0.7fr_1.3fr]">
+      <div>
+        <div class="section-panel">
+          <p class="text-lg font-semibold text-[var(--vermont-dark)]">{copy.contact.officeTitle}</p>
+          <ul class="info-list mt-5">
+            {copy.contact.officeItems.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div id="contact-form" class="surface-panel p-8 md:p-12">
+        <p class="text-2xl font-bold text-[var(--vermont-dark)]">{copy.contact.formTitle}</p>
+        <p class="mt-3 leading-7">{copy.contact.formDescription}</p>
+        {sent && (
+          <div class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+            {copy.contact.success}
+          </div>
+        )}
+        {hasError && (
+          <div class="mt-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            {errorMessage}
+          </div>
+        )}
+        <div class="mt-8">
+          <ContactForm lang={lang} />
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>

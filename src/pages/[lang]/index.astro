@@ -1,0 +1,91 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import { resolveLang, withLang } from "../../lib/i18n";
+import { getSiteCopy } from "../../lib/site";
+
+const lang = resolveLang(Astro.params.lang);
+const copy = getSiteCopy(lang);
+---
+
+<MainLayout lang={lang}>
+  <section class="hero-shell hero-visual hero-grid overflow-hidden">
+    <div class="container-vermont min-h-[40rem] py-24">
+      <div class="max-w-4xl text-white">
+        <p class="section-eyebrow !text-sky-200">{copy.hero.eyebrow}</p>
+        <h1 class="mt-6 max-w-4xl !text-white md:max-w-5xl">{copy.hero.title}</h1>
+        <p class="mt-6 max-w-2xl text-lg text-slate-200">{copy.hero.description}</p>
+        <div class="mt-10 flex flex-wrap gap-4">
+          <a href={withLang(lang, "/contact")} class="btn-primary">{copy.hero.primaryCta}</a>
+          <a href={withLang(lang, "/projects")} class="btn-secondary border-white text-white hover:border-white hover:bg-white hover:text-slate-900">
+            {copy.hero.secondaryCta}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-vermont">
+    <div class="container-vermont">
+      <p class="section-eyebrow">{copy.home.valueTitle}</p>
+      <div class="section-grid-split mt-5">
+        <h2 class="max-w-xl">NextGen IT Services</h2>
+        <div class="section-panel">
+          <p class="text-lg leading-8">{copy.home.valueText}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-vermont bg-slate-50">
+    <div class="container-vermont">
+      <p class="section-eyebrow">{copy.home.servicesTitle}</p>
+      <div class="mt-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <p class="max-w-3xl text-lg leading-8">{copy.home.servicesIntro}</p>
+        <a href={withLang(lang, "/services")} class="btn-secondary">{copy.nav.services}</a>
+      </div>
+      <div class="mt-10 grid gap-6 lg:grid-cols-3">
+        {copy.services.cards.map((service) => (
+          <article class="card-vermont">
+            <h3>{service.title}</h3>
+            <p class="mt-4 leading-7">{service.description}</p>
+            <ul class="mt-5 list-disc space-y-2 pl-5 text-slate-700">
+              {service.bullets.map((bullet) => (
+                <li>{bullet}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-vermont">
+    <div class="container-vermont">
+      <p class="section-eyebrow">{copy.home.projectsTitle}</p>
+      <div class="mt-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <p class="max-w-3xl text-lg leading-8">{copy.home.projectsIntro}</p>
+        <a href={withLang(lang, "/projects")} class="btn-secondary">{copy.nav.projects}</a>
+      </div>
+      <div class="mt-10 grid gap-6 lg:grid-cols-3">
+        {copy.projects.cards.map((project) => (
+          <article class="case-card">
+            <div>
+              <div class="flex items-center justify-between gap-4">
+                <p class="text-xl font-semibold text-[var(--vermont-dark)]">{project.client}</p>
+                <span class="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-sky-700">
+                  {project.sector}
+                </span>
+              </div>
+              <p class="mt-5 leading-7">{project.summary}</p>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-2">
+              {project.highlights.map((highlight) => (
+                <span class="case-chip">{highlight}</span>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</MainLayout>

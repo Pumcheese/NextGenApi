@@ -1,0 +1,42 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  primaryLabel: string;
+  primaryHref: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  primaryLabel,
+  primaryHref,
+  secondaryLabel,
+  secondaryHref,
+} = Astro.props;
+---
+
+<section class="hero-shell hero-visual hero-grid overflow-hidden">
+  <div class="container-vermont min-h-[28rem] py-20 md:py-24">
+    <div class="max-w-5xl text-white">
+      <p class="section-eyebrow !text-sky-200">{eyebrow}</p>
+      <h1 class="mt-6 max-w-5xl !text-white">{title}</h1>
+      <p class="mt-6 max-w-3xl text-lg leading-8 text-slate-200">{description}</p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a href={primaryHref} class="btn-primary">{primaryLabel}</a>
+        {secondaryLabel && secondaryHref && (
+          <a
+            href={secondaryHref}
+            class="btn-secondary border-white text-white hover:border-white hover:bg-white hover:text-slate-900"
+          >
+            {secondaryLabel}
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+</section>

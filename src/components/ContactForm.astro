@@ -1,0 +1,106 @@
+---
+import type { Lang } from "../lib/i18n";
+import { getSiteCopy } from "../lib/site";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = getSiteCopy(lang);
+---
+
+<form action="/api/contact" method="post" class="space-y-5 js-pending-form" data-pending-label={copy.form.submitPending}>
+  <input type="hidden" name="lang" value={lang} />
+  <div class="grid gap-5 md:grid-cols-2">
+    <label class="block">
+      <span class="mb-2 block text-sm font-medium text-slate-700">{copy.form.name}</span>
+      <input
+        class="form-field"
+        type="text"
+        name="name"
+        required
+        minlength="2"
+        maxlength="120"
+        autocomplete="name"
+        title={copy.form.validationName}
+      />
+    </label>
+    <label class="block">
+      <span class="mb-2 block text-sm font-medium text-slate-700">{copy.form.company}</span>
+      <input class="form-field" type="text" name="company" maxlength="120" autocomplete="organization" />
+    </label>
+    <label class="block">
+      <span class="mb-2 block text-sm font-medium text-slate-700">{copy.form.email}</span>
+      <input
+        class="form-field"
+        type="email"
+        name="email"
+        required
+        maxlength="160"
+        autocomplete="email"
+        title={copy.form.validationEmail}
+      />
+    </label>
+    <label class="block">
+      <span class="mb-2 block text-sm font-medium text-slate-700">{copy.form.phone}</span>
+      <input
+        class="form-field"
+        type="tel"
+        name="phone"
+        maxlength="30"
+        autocomplete="tel"
+        pattern="^[0-9+()\\-\\s]{7,30}$"
+        title={copy.form.validationPhone}
+      />
+    </label>
+    <label class="block">
+      <span class="mb-2 block text-sm font-medium text-slate-700">{copy.form.service}</span>
+      <select class="form-field" name="service">
+        <option value=""></option>
+        {copy.form.serviceOptions.map((option) => (
+          <option value={option.value}>{option.label}</option>
+        ))}
+      </select>
+    </label>
+    <label class="block">
+      <span class="mb-2 block text-sm font-medium text-slate-700">{copy.form.requestType}</span>
+      <select class="form-field" name="requestType">
+        {copy.form.requestOptions.map((option) => (
+          <option value={option.value}>{option.label}</option>
+        ))}
+      </select>
+    </label>
+  </div>
+  <label class="block">
+    <span class="mb-2 block text-sm font-medium text-slate-700">{copy.form.message}</span>
+    <textarea
+      class="form-field min-h-40 resize-y"
+      name="message"
+      required
+      minlength="12"
+      maxlength="2000"
+      title={copy.form.validationMessage}
+    ></textarea>
+  </label>
+  <button class="btn-primary" type="submit" data-default-label={copy.form.submit}>
+    {copy.form.submit}
+  </button>
+</form>
+
+<script>
+  const forms = document.querySelectorAll(".js-pending-form");
+
+  for (const form of forms) {
+    if (!(form instanceof HTMLFormElement)) continue;
+
+    form.addEventListener("submit", () => {
+      const submitButton = form.querySelector('button[type="submit"]');
+
+      if (!(submitButton instanceof HTMLButtonElement)) return;
+
+      submitButton.disabled = true;
+      submitButton.textContent = form.dataset.pendingLabel || submitButton.dataset.defaultLabel || submitButton.textContent;
+    });
+  }
+</script>

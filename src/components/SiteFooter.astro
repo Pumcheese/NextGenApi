@@ -1,0 +1,37 @@
+---
+import type { Lang } from "../lib/i18n";
+import { getSiteCopy } from "../lib/site";
+import { withLang } from "../lib/i18n";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const copy = getSiteCopy(lang);
+---
+
+<footer class="border-t border-slate-200 bg-slate-950 py-14 text-slate-200">
+  <div class="container-vermont grid gap-10 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
+    <div>
+      <p class="text-xl font-bold text-white">{copy.footer.title}</p>
+      <p class="mt-4 max-w-xl text-slate-300">{copy.footer.text}</p>
+    </div>
+    <div>
+      <p class="font-semibold text-white">{copy.footer.linksTitle}</p>
+      <div class="mt-4 flex flex-col gap-3">
+        <a href={withLang(lang)}>{copy.nav.home}</a>
+        <a href={withLang(lang, "/services")}>{copy.nav.services}</a>
+        <a href={withLang(lang, "/projects")}>{copy.nav.projects}</a>
+        <a href={withLang(lang, "/contact")}>{copy.nav.contact}</a>
+      </div>
+    </div>
+    <div>
+      <p class="font-semibold text-white">{copy.footer.adminTitle}</p>
+      <p class="mt-4 text-slate-300">{copy.footer.adminText}</p>
+      <a href={withLang(lang, "/admin/login")} class="mt-5 inline-flex text-sky-300 hover:text-sky-200">
+        {copy.nav.admin}
+      </a>
+    </div>
+  </div>
+</footer>

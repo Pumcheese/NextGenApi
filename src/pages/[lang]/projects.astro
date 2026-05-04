@@ -1,0 +1,53 @@
+---
+import PageHero from "../../components/PageHero.astro";
+import MainLayout from "../../layouts/MainLayout.astro";
+import { resolveLang, withLang } from "../../lib/i18n";
+import { getSiteCopy } from "../../lib/site";
+
+const lang = resolveLang(Astro.params.lang);
+const copy = getSiteCopy(lang);
+---
+
+<MainLayout lang={lang} title={copy.nav.projects}>
+  <PageHero
+    eyebrow={copy.nav.projects}
+    title={copy.projects.title}
+    description={copy.projects.intro}
+    primaryLabel={copy.hero.primaryCta}
+    primaryHref={withLang(lang, "/contact")}
+    secondaryLabel={copy.nav.services}
+    secondaryHref={withLang(lang, "/services")}
+  />
+
+  <section class="section-soft bg-slate-50">
+    <div class="container-vermont">
+      <div class="mt-6 grid gap-6 lg:grid-cols-3">
+        {copy.projects.cards.map((project) => (
+          <article class="case-card">
+            <div>
+              <div class="flex items-center justify-between gap-4">
+                <p class="text-xl font-semibold text-[var(--vermont-dark)]">{project.client}</p>
+                <span class="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-sky-700">
+                  {project.sector}
+                </span>
+              </div>
+              <p class="mt-5 leading-7">{project.summary}</p>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-2">
+              {project.highlights.map((highlight) => (
+                <span class="case-chip">{highlight}</span>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="cta-strip">
+        <div>
+          <p class="text-lg font-semibold text-[var(--vermont-dark)]">{copy.projects.ctaTitle}</p>
+          <p class="mt-2 max-w-2xl text-slate-600">{copy.projects.ctaText}</p>
+        </div>
+        <a href={withLang(lang, "/contact")} class="btn-primary">{copy.hero.primaryCta}</a>
+      </div>
+    </div>
+  </section>
+</MainLayout>

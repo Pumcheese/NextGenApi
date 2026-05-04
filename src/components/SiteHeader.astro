@@ -1,0 +1,47 @@
+---
+import type { Lang } from "../lib/i18n";
+import { getSiteCopy } from "../lib/site";
+import { withLang } from "../lib/i18n";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+
+interface Props {
+  lang: Lang;
+  pathname: string;
+}
+
+const { lang, pathname } = Astro.props;
+const copy = getSiteCopy(lang);
+
+const links = [
+  { href: withLang(lang), label: copy.nav.home },
+  { href: withLang(lang, "/services"), label: copy.nav.services },
+  { href: withLang(lang, "/projects"), label: copy.nav.projects },
+  { href: withLang(lang, "/contact"), label: copy.nav.contact },
+];
+---
+
+<header class="vermont-header">
+  <div class="container-vermont flex min-h-20 flex-wrap items-center justify-between gap-4 py-4">
+    <a href={withLang(lang)} class="text-2xl font-extrabold tracking-tight text-[var(--vermont-dark)]">
+      NextGen IT Services
+    </a>
+
+    <nav class="flex flex-1 flex-wrap items-center justify-end gap-4 text-sm font-medium md:text-base">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            "text-slate-700 hover:text-[var(--vermont-blue)]",
+            pathname === link.href ? "text-[var(--vermont-dark)]" : "",
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+      <LanguageSwitcher currentLang={lang} currentPath={pathname} />
+      <a href={withLang(lang, "/contact")} class="btn-primary header-cta">
+        {copy.nav.contactCta}
+      </a>
+    </nav>
+  </div>
+</header>

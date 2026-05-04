@@ -1,0 +1,195 @@
+---
+import type { ContactStatus } from "@prisma/client";
+import MainLayout from "../../../layouts/MainLayout.astro";
+import { resolveLang } from "../../../lib/i18n";
+import { getSiteCopy } from "../../../lib/site";
+import { prisma } from "../../../lib/db";
+
+const lang = resolveLang(Astro.params.lang);
+const copy = getSiteCopy(lang);
+const statusParam = Astro.url.searchParams.get("status");
+const searchQuery = Astro.url.searchParams.get("q")?.trim() || "";
+const updated = Astro.url.searchParams.get("updated") === "1";
+const deleted = Astro.url.searchParams.get("deleted") === "1";
+const selectedStatus =
+  statusParam && ["PENDING", "REVIEWED", "RESPONDED"].includes(statusParam)
+    ? (statusParam as ContactStatus)
+    : "";
+const returnToSearch = new URLSearchParams();
+
+if (selectedStatus) {
+  returnToSearch.set("status", selectedStatus);
+}
+
+if (searchQuery) {
+  returnToSearch.set("q", searchQuery);
+}
+
+const returnTo = `/${lang}/admin${returnToSearch.size ? `?${returnToSearch.toString()}` : ""}`;
+const contacts = await prisma.contact.findMany({
+  orderBy: { createdAt: "desc" },
+});
+const filteredContacts = contacts.filter((contact) => {
+  const matchesStatus = !selectedStatus || contact.status === selectedStatus;
+
+  if (!matchesStatus) {
+    return false;
+  }
+
+  if (!searchQuery) {
+    return true;
+  }
+
+  const normalizedQuery = searchQuery.toLowerCase();
+
+  return [contact.name, contact.email, contact.company || "", contact.service || ""].some((value) =>
+    value.toLowerCase().includes(normalizedQuery),
+  );
+});
+
+const counts = contacts.reduce(
+  (acc, contact) => {
+    acc.total += 1;
+    acc[contact.status] += 1;
+    return acc;
+  },
+  { total: 0, PENDING: 0, REVIEWED: 0, RESPONDED: 0 } as Record<ContactStatus | "total", number>,
+);
+
+function badgeClass(status: ContactStatus) {
+  if (status === "RESPONDED") return "admin-badge bg-emerald-100 text-emerald-700";
+  if (status === "REVIEWED") return "admin-badge bg-amber-100 text-amber-700";
+  return "admin-badge bg-slate-100 text-slate-700";
+}
+---
+
+<MainLayout lang={lang} title={copy.admin.dashboardTitle}>
+  <section class="section-vermont bg-slate-50">
+    <div class="container-vermont">
+      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p class="section-eyebrow">{copy.nav.admin}</p>
+          <h1 class="section-heading max-w-4xl text-4xl md:text-5xl">{copy.admin.dashboardTitle}</h1>
+          <p class="section-intro max-w-3xl">{copy.admin.dashboardDescription}</p>
+        </div>
+        <form action="/api/admin/logout" method="post">
+          <input type="hidden" name="lang" value={lang} />
+          <button class="btn-secondary" type="submit">{copy.admin.logoutLabel}</button>
+        </form>
+      </div>
+
+      {(updated || deleted) && (
+        <div class="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          {updated ? copy.admin.updateSuccess : copy.admin.deleteSuccess}
+        </div>
+      )}
+
+      <div class="mt-10 grid gap-4 md:grid-cols-4">
+        <article class="surface-panel p-6">
+          <p class="text-sm uppercase tracking-wide text-slate-500">{copy.admin.totalLabel}</p>
+          <p class="mt-3 text-3xl font-extrabold text-[var(--vermont-dark)]">{counts.total}</p>
+        </article>
+        {(["PENDING", "REVIEWED", "RESPONDED"] as const).map((status) => (
+          <article class="surface-panel p-6">
+            <p class="text-sm uppercase tracking-wide text-slate-500">{copy.statusLabels[status]}</p>
+            <p class="mt-3 text-3xl font-extrabold text-[var(--vermont-dark)]">{counts[status]}</p>
+          </article>
+        ))}
+      </div>
+
+      <div class="mt-10 surface-panel p-6 md:p-8">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">{copy.admin.filtersTitle}</p>
+          </div>
+          <form method="get" class="grid w-full gap-4 md:grid-cols-[1.1fr_0.9fr_auto_auto] lg:max-w-4xl">
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">{copy.admin.searchLabel}</span>
+              <input
+                class="form-field"
+                type="search"
+                name="q"
+                value={searchQuery}
+                placeholder={copy.admin.searchPlaceholder}
+              />
+            </label>
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">{copy.admin.statusLabel}</span>
+              <select class="form-field" name="status">
+                <option value="">{copy.admin.allStatusesLabel}</option>
+                {(["PENDING", "REVIEWED", "RESPONDED"] as const).map((status) => (
+                  <option value={status} selected={selectedStatus === status}>
+                    {copy.statusLabels[status]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button class="btn-primary self-end" type="submit">{copy.admin.searchButton}</button>
+            <a class="btn-secondary self-end" href={`/${lang}/admin`}>
+              {copy.admin.resetFiltersLabel}
+            </a>
+          </form>
+        </div>
+      </div>
+
+      <div class="mt-10 space-y-5">
+        {filteredContacts.length === 0 && (
+          <div class="surface-panel p-8 text-slate-600">
+            {contacts.length === 0 ? copy.admin.emptyState : copy.admin.filteredEmptyState}
+          </div>
+        )}
+
+        {filteredContacts.map((contact) => (
+          <article class="surface-panel p-8">
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div class="max-w-3xl">
+                <div class="flex flex-wrap items-center gap-3">
+                  <h2 class="!text-2xl">{contact.name}</h2>
+                  <span class={badgeClass(contact.status)}>{copy.statusLabels[contact.status]}</span>
+                </div>
+                <div class="mt-3 flex flex-wrap gap-4 text-sm text-slate-500">
+                  <span>{contact.email}</span>
+                  {contact.phone && <span>{contact.phone}</span>}
+                  {contact.company && <span>{contact.company}</span>}
+                  <span>{contact.createdAt.toLocaleString()}</span>
+                </div>
+                <p class="mt-5 whitespace-pre-line leading-7">{contact.message}</p>
+                <div class="mt-5 flex flex-wrap gap-2">
+                  {contact.requestType && <span class="case-chip">{contact.requestType}</span>}
+                  {contact.service && <span class="case-chip">{contact.service}</span>}
+                </div>
+              </div>
+
+              <div class="w-full max-w-xs space-y-3">
+                <form action={`/api/admin/contacts/${contact.id}/status`} method="post" class="space-y-3">
+                  <input type="hidden" name="lang" value={lang} />
+                  <input type="hidden" name="returnTo" value={returnTo} />
+                  <label class="block">
+                    <span class="mb-2 block text-sm font-medium text-slate-700">{copy.admin.statusLabel}</span>
+                    <select class="form-field" name="status">
+                      {(["PENDING", "REVIEWED", "RESPONDED"] as const).map((status) => (
+                        <option value={status} selected={contact.status === status}>
+                          {copy.statusLabels[status]}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <button class="btn-primary w-full" type="submit">{copy.admin.saveStatusLabel}</button>
+                </form>
+                <form
+                  action={`/api/admin/contacts/${contact.id}/delete`}
+                  method="post"
+                  onsubmit={`return window.confirm(${JSON.stringify(copy.admin.deleteConfirm)})`}
+                >
+                  <input type="hidden" name="lang" value={lang} />
+                  <input type="hidden" name="returnTo" value={returnTo} />
+                  <button class="btn-danger w-full" type="submit">{copy.admin.deleteLabel}</button>
+                </form>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</MainLayout>

@@ -1,0 +1,27 @@
+---
+import type { Lang } from "../lib/i18n";
+
+interface Props {
+  currentLang: Lang;
+  currentPath: string;
+}
+
+const { currentLang, currentPath } = Astro.props;
+const pathWithoutLang = currentPath.replace(/^\/(es|en)/, "") || "/";
+---
+
+<div class="flex items-center gap-2">
+  {(["es", "en"] as const).map((lang) => (
+    <a
+      href={`/${lang}${pathWithoutLang === "/" ? "/" : pathWithoutLang}`}
+      class:list={[
+        "rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide",
+        currentLang === lang
+          ? "border-sky-300 bg-sky-50 text-sky-800"
+          : "border-slate-200 bg-white text-slate-700 hover:border-sky-300 hover:text-sky-700",
+      ]}
+    >
+      {lang}
+    </a>
+  ))}
+</div>
