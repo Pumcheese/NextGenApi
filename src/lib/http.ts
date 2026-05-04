@@ -1,5 +1,5 @@
 import type { APIContext, AstroGlobal } from "astro";
-import { resolveLang } from "./i18n";
+import { resolveLang } from "./i18n.ts";
 
 type RequestCarrier = Pick<APIContext, "request" | "url"> | Pick<AstroGlobal, "request" | "url">;
 

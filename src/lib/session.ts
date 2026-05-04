@@ -10,11 +10,11 @@ export type SessionPayload = {
 };
 
 function getSessionSecret() {
-  const secret = import.meta.env.SESSION_SECRET || "";
+  const secret = import.meta.env?.SESSION_SECRET || "";
   const fallback = "nextgen-dev-secret";
   const activeSecret = secret || fallback;
 
-  if (import.meta.env.PROD && (!secret || secret === "cambia-esta-clave-larga-en-produccion")) {
+  if (import.meta.env?.PROD && (!secret || secret === "cambia-esta-clave-larga-en-produccion")) {
     throw new Error("SESSION_SECRET must be configured with a strong value in production.");
   }
 
